@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 写sql语句 
+	命名空间  
+-->
+<mapper namespace="mapper.UserMapper">
+	<!-- 通过ID查询一个用户 -->
+	<select id="findUserById" parameterType="Integer" resultType="com.heima.mybatis.pojo.User">
+		select * from user where id= #{v}
+	</select>
+	<!-- #{} 占位符
+		${} 字符串拼接 -->
+	<select id="findUserByUsername" parameterType="String" resultType="User">
+		select * from user where username like '%${value}%'	
+	</select>
+	<insert id="insertUser" parameterType="com.heima.mybatis.pojo.User">
+		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user(username,birthday,address,sex)
+		values (#{username},#{birthday},#{address},#{sex})
+	</insert>
+	<update id="updateUserById" parameterType="com.heima.mybatis.pojo.User">
+		update user 
+		set username=#{username},sex=#{sex},birthday=#{birthday},address=#{address}
+		where id=#{id}
+	</update>
+	<!-- 根据用户名进行模糊查询 -->
+	<select id="findUserByQueryVo" parameterType="QueryVo" resultType="User">
+		select * from user where username like '%#{user.username}%'	
+	</select>
+	<select id="countUser" resultType="Integer" >
+		select count(*) from user 
+	</select>
+</mapper>
